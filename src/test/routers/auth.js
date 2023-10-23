@@ -1,0 +1,53 @@
+const router = require("express").Router();
+const User = require("../Models/User.js");
+const Cryptojs = require("crypto-js");
+const jwt = require("jsonwebtoken");
+
+//REGISTER
+router.post("/register", async (req,res)=>{
+
+    const newUser = new User({
+        username: req.body.username,
+        email: req.body.email,
+        password: Cryptojs.AES.encrypt(req.body.password,process.env.PASS_SEC).toString(),
+    });
+
+    try{
+        const savedUser = await newUser.save();
+        console.log(savedUser);
+        res.status(201).json(savedUser);
+    } catch (err) {
+        console.log(500).json(err);
+    }
+    
+})
+
+router.post("/login",async (req,res)=>{
+    try{
+        const user = await User.findOne({username: req.body.username});
+        !user && res.status(401).json("Wrong credentials");
+
+        const hashedPassword = Cryptojs.AES.decrypt(user.password,process.env.PASS_SEC);
+        const Orgpassword = hashedPassword.toString(Cryptojs.enc.Utf8);
+        Orgpassword != req.body.password && 
+            res.status(401).json("Wrong credentials");
+        
+        const accessToken = jwt.sign({
+            id: user._id,
+            admin: user.isAdmin,
+        },
+        process.env.JWT_SEC,{expiresIn:"3d"});    
+        try{
+            const {password, ...others} = user._doc;
+            res.status(200).json({...others, accessToken});
+        } catch(err) {
+            console.log(err);
+        }
+
+    } catch(err){
+        res.status(500).json(err);
+        console.log("Error");
+    }
+})
+
+module.exports = router
