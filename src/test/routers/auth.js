@@ -17,9 +17,12 @@ router.post("/register", async (req,res)=>{
         console.log(savedUser);
         res.status(201).json(savedUser);
     } catch (err) {
-        console.log(500).json(err);
+        try{
+            console.log(500).json(err);
+        }catch(err){
+            console.log(err);
+        }
     }
-    
 })
 
 router.post("/login",async (req,res)=>{
@@ -29,9 +32,10 @@ router.post("/login",async (req,res)=>{
 
         const hashedPassword = Cryptojs.AES.decrypt(user.password,process.env.PASS_SEC);
         const Orgpassword = hashedPassword.toString(Cryptojs.enc.Utf8);
-        Orgpassword != req.body.password && 
+        if(Orgpassword != req.body.password){
             res.status(401).json("Wrong credentials");
-        
+        } 
+
         const accessToken = jwt.sign({
             id: user._id,
             admin: user.isAdmin,
@@ -41,14 +45,14 @@ router.post("/login",async (req,res)=>{
             const {password, ...others} = user._doc;
             res.status(200).json({...others, accessToken});
         } catch(err) {
-            console.log(err);
+            console.log("err");
         }
 
     } catch(err){
         try{
             res.status(500).json(err);
-        } catch {}
-        console.log("Error");
+        }catch(err){}
+        console.log("Error at auth");
     }
 })
 
