@@ -3,7 +3,7 @@ const User = require("../Models/User.js");
 const Cryptojs = require("crypto-js");
 const jwt = require("jsonwebtoken");
 
-//REGISTER
+//Register
 router.post("/register", async (req,res)=>{
 
     const newUser = new User({
