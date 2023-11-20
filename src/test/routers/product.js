@@ -1,11 +1,12 @@
-const {verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin} = require("./verifyToken.js");
+const {verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin,verifyTokenAndVendor,verifyTokenAndVendorAuthorization} = require("./verifyToken.js");
 const router = require("express").Router();
 const Cryptojs = require("crypto-js");
 const Product = require("../Models/Product.js");
 
 //create
-router.post("/", async (req,res)=>{
+router.post("/",verifyTokenAndVendor, async (req,res)=>{
     const newProduct = new Product(req.body);
+    newProduct.vendorId = req.user.id
     try{
         const savedProduct = await newProduct.save();
         res.status(200).json(savedProduct);
@@ -14,22 +15,34 @@ router.post("/", async (req,res)=>{
     }
 })
 
-router.put("/:id", verifyTokenAndAdmin,async (req,res) =>{
+router.put("/:id", verifyTokenAndVendor,async (req,res) =>{
     try{
-        const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
-            $set: req.body,
-        },{new:true});
-        res.status(200).json(updatedProduct);
+        const product = await Product.findById(req.params.id);
+        if(product.vendorId === req.user.id){
+            const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
+                $set: req.body,
+            },{new:true});
+            res.status(200).json(updatedProduct);
+        }
+        else{
+            res.status(403).json("You are not in responsibility to update this product!");
+        }
     }catch(err){
         res.status(500).json(err);
     }
 });
 
 //Delete
-router.delete("/:id", verifyTokenAndAdmin, async (req,res)=>{
+router.delete("/:id",verifyTokenAndVendor, async (req,res)=>{
     try{
-        await Product.findByIdAndDelete(req.params.id)
-        res.status(200).json("Product has been deleted")
+        const product = await Product.findById(req.params.id);
+        if(product.vendorId === req.user.id || req.user.admin){
+            await Product.findByIdAndDelete(req.params.id);
+            res.status(200).json("Product has been deleted");
+        }
+        else{
+            res.status(403).json("You are not in responsibility to delete this product!");
+        }
     }catch(err){
         res.status(500).json(err);
     }
@@ -38,7 +51,7 @@ router.delete("/:id", verifyTokenAndAdmin, async (req,res)=>{
 //Get Product
 router.get("/find/:id", async (req,res)=>{
     try{
-        const product = await updatedProduct.findById(req.params.id)
+        const product = await Product.findById(req.params.id)
         res.status(200).json(product);
     }catch(err){
         res.status(500).json(err);
@@ -67,7 +80,7 @@ router.get("/", async (req,res)=>{
         res.status(500).json(err);
     }
 })
-//
+
 ////get user stats
 //router.get("/stats", verifyTokenAndAdmin, async (req,res)=>{
 //    const date = new Date();
@@ -92,5 +105,5 @@ router.get("/", async (req,res)=>{
 //        res.status(500).json(err);
 //    }
 //})
-//
+
 module.exports = router;

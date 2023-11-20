@@ -15,9 +15,19 @@ const verifyToken = (req,res,next) => {
     }
 }
 
+const verifyTokenAndVendorAuthorization = (req,res,next) =>{
+    verifyToken(req,res, ()=>{
+        if(req.user.id === req.params.id || req.user.vendor){
+            next();
+        } else {
+            res.status(403).json("You're not allowed to do that!");
+        }
+    });
+}
+
 const verifyTokenAndAuthorization = (req,res,next) =>{
     verifyToken(req,res, ()=>{
-        if(req.user.id === req.params.id || req.user.isAdmin){
+        if(req.user.id === req.params.id || req.user.admin){
             next();
         } else {
             res.status(403).json("You're not allowed to do that!");
@@ -30,11 +40,19 @@ const verifyTokenAndAdmin = (req,res,next) =>{
         if(req.user.admin){
             next();
         } else {
-            console.log(req.user.isAdmin);
-            res.status(403).json("You're not allowed to do that!");
+            console.log(req.user.admin);
+            res.status(403).json("You're not an admin!");
+        }
+    });
+}
+const verifyTokenAndVendor = (req,res,next) =>{
+    verifyToken(req,res, ()=>{
+        if(req.user.vendor || req.user.admin){
+            next();
+        } else {
+            res.status(403).json("You're not a vendor!");
         }
     });
 }
 
-
-module.exports = {verifyToken,verifyTokenAndAuthorization,verifyTokenAndAdmin};
+module.exports = {verifyToken,verifyTokenAndAuthorization,verifyTokenAndAdmin,verifyTokenAndVendor,verifyTokenAndVendorAuthorization};

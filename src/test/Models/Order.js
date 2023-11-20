@@ -6,6 +6,7 @@ const  OrderSchema = new mongoose.Schema(
         product: [
             {
                 productId: {type:String},
+                vendorId: {type:String},
                 quantity: {type:Number,default:1}, 
             }
         ],
