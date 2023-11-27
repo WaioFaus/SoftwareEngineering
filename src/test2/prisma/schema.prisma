@@ -20,6 +20,7 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   products Product[]
+  orders Order[]
 }
 
 
@@ -33,6 +34,30 @@ model Product {
   size String
   color String
   price Int
+  orders Order_Product[]
 
   @@index([vendorId])
+}
+
+model Order {
+  OrderId String @id @default(cuid())
+  User User @relation(fields: [UserId], references: [UserId])
+  UserId String
+  products Order_Product[]
+  address String
+  status String @default("pending")
+
+  @@index([UserId])
+}
+
+model Order_Product {
+  Order Order @relation(fields: [OrderId], references: [OrderId])
+  OrderId String
+  Product Product @relation(fields: [ProductId], references: [ProductId])
+  ProductId String
+  amount Int
+
+  @@id([OrderId,ProductId])
+  @@index([OrderId])
+  @@index([ProductId])
 }
