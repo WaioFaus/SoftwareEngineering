@@ -16,14 +16,14 @@ router.post("/register", async (req,res)=>{
     try{
         //const savedUser = await newUser.save();
         //console.log(savedUser);
-        await prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 username: req.body.username,
                 email: req.body.email,
                 password: req.body.password //Cryptojs.AES.encrypt(req.body.password,process.env.PASS_SEC).toString(),
             },
         });
-        res.status(201).json("Saved");
+        res.status(201).json(user);
     } catch (err) {
         try{
             console.log(500).json(err);
@@ -44,8 +44,8 @@ router.post("/login",async (req,res)=>{
         !user && res.status(401).json("Wrong username");
         console.log(user);
 
-        const hashedPassword = Cryptojs.AES.decrypt(user.password,process.env.PASS_SEC);
-        const Orgpassword = hashedPassword.toString(Cryptojs.enc.Utf8);
+        //const hashedPassword = Cryptojs.AES.decrypt(user.password,process.env.PASS_SEC);
+        //const Orgpassword = hashedPassword.toString(Cryptojs.enc.Utf8);
         if(user.password != req.body.password){
             res.status(401).json("Wrong password");
         } 

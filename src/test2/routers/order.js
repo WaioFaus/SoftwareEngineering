@@ -9,14 +9,16 @@ const prisma = new PrismaClient();
 //create
 router.post("/",verifyToken, async (req,res)=>{
     const newOrder = req.body;
+    const OrderInf = {
+        UserId: req.user.id,
+        address: newOrder.address
+    }
     const products = newOrder.products;
+
     
     try{
         const order = await prisma.order.create({
-            data:{
-                UserId: req.user.id,
-                address: newOrder.address,
-            },
+            data: OrderInf,
         });
 
         products.forEach(element => {
@@ -33,6 +35,7 @@ router.post("/",verifyToken, async (req,res)=>{
     }
 })
 
+//update
 router.put("/:id",verifyToken, async (req,res) =>{
     try{
         //const updatedOrder = await Order.findByIdAndUpdate(req.params.id, {
@@ -124,7 +127,7 @@ router.get("/find/:userid", async (req,res)=>{
 
 router.get("/", async (req,res)=>{
     try{
-        const orders = await prisma.order.findMany();
+        const orders = await prisma.order_Product.findMany();
         res.status(200).json(orders);
     }catch(err){
         res.status(500).json(err);
