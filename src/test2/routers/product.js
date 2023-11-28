@@ -21,6 +21,7 @@ router.post("/",verifyToken, async (req,res)=>{
     }
 })
 
+//update
 router.put("/:id", async (req,res) =>{
     try{
         //const updatedProduct = await Product.findByIdAndUpdate(req.params.id, {
@@ -73,11 +74,15 @@ router.get("/find/:id", async (req,res)=>{
 //Get all Product
 router.get("/", async (req,res)=>{
     const qNew = req.query.new;
+    console.log(req.query);
     //const qCategory = req.query.category;
     try{
-        const products = [];
+        var products = [];
         if(qNew){
             products = await prisma.product.findMany({
+                orderBy:{
+                    createdAt: 'desc'
+                },
                 take: parseInt(qNew)
             });
         }
@@ -94,6 +99,7 @@ router.get("/", async (req,res)=>{
         
         res.status(200).json(products);
     }catch(err){
+        console.log(err)
         res.status(500).json(err);
     }
 })

@@ -9,14 +9,16 @@ const prisma = new PrismaClient();
 //create
 router.post("/",verifyToken, async (req,res)=>{
     const newOrder = req.body;
+    const OrderInf = {
+        UserId: req.user.id,
+        address: newOrder.address
+    }
     const products = newOrder.products;
+
     
     try{
         const order = await prisma.order.create({
-            data:{
-                UserId: req.user.id,
-                address: newOrder.address,
-            },
+            data: OrderInf,
         });
 
         products.forEach(element => {
