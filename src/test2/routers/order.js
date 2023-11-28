@@ -33,6 +33,7 @@ router.post("/",verifyToken, async (req,res)=>{
     }
 })
 
+//update
 router.put("/:id",verifyToken, async (req,res) =>{
     try{
         //const updatedOrder = await Order.findByIdAndUpdate(req.params.id, {
