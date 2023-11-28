@@ -46,7 +46,6 @@ router.get("/find/:userid", async (req,res)=>{
 })
 
 ////Get all Product
-
 router.get("/", async (req,res)=>{
     try{
         const carts = await Cart.find();
