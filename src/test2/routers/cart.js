@@ -28,7 +28,27 @@ router.put("/:id", async (req,res) =>{
 //Delete
 router.delete("/:id", async (req,res)=>{
     try{
-        await Cart.findByIdAndDelete(req.params.id)
+        //await Order.findByIdAndDelete(req.params.id)
+        const products = await prisma.cart_Product.findMany({
+            select:{
+                ProductId: true
+            },
+            where: {
+                CartId: req.params.id,
+            }
+        });
+        if(products){
+            await prisma.cart_Product.deleteMany({
+                where: {
+                    CartId: req.params.id,
+                }
+            });
+        }
+        await prisma.cart.delete({
+            where: {
+                CartId: req.params.id
+            }
+        });
         res.status(200).json("Cart has been deleted")
     }catch(err){
         res.status(500).json(err);
@@ -46,7 +66,6 @@ router.get("/find/:userid", async (req,res)=>{
 })
 
 ////Get all Product
-
 router.get("/", async (req,res)=>{
     try{
         const carts = await Cart.find();
