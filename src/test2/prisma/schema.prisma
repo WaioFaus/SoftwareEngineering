@@ -21,6 +21,7 @@ model User {
   updatedAt DateTime @updatedAt
   products Product[]
   orders Order[]
+  carts Cart[]
 }
 
 
@@ -35,6 +36,9 @@ model Product {
   color String
   price Int
   orders Order_Product[]
+  carts Cart_Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([vendorId])
 }
@@ -46,6 +50,8 @@ model Order {
   products Order_Product[]
   address String
   status String @default("pending")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([UserId])
 }
@@ -59,5 +65,29 @@ model Order_Product {
 
   @@id([OrderId,ProductId])
   @@index([OrderId])
+  @@index([ProductId])
+}
+
+model Cart{
+  CartId String @id @default(cuid())
+  User User @relation(fields: [UserId], references: [UserId])
+  UserId String
+  products Cart_Product[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  @@index([UserId])
+}
+
+model Cart_Product {
+  Cart Cart @relation(fields: [CartId],references: [CartId])
+  CartId String
+  Product Product @relation(fields: [ProductId],references: [ProductId])
+  ProductId String
+  amount Int
+
+  @@id([CartId,ProductId])
+  @@index([CartId])
   @@index([ProductId])
 }
