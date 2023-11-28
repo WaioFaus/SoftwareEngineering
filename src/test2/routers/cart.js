@@ -2,26 +2,73 @@ const {verifyToken, verifyTokenAndAuthorization, verifyTokenAndAdmin} = require(
 const router = require("express").Router();
 const Cryptojs = require("crypto-js");
 const Cart = require("../Models/Cart.js");
+const { PrismaClient } = require('@prisma/client');
+const { verify } = require("jsonwebtoken");
+const prisma = new PrismaClient();
 
 //create
-router.post("/", async (req,res)=>{
-    const newCart = new Cart(req.body);
+router.post("/", verifyToken, async (req,res)=>{
+    const newCart = req.body;
+    const CartInf = {UserId: req.user.id};
+    const products = newCart.products;
+    
     try{
-        const savedCart = await newCart.save();
-        res.status(200).json(savedCart);
+        const cart = await prisma.cart.create({
+            data: CartInf,
+        });
+
+        products.forEach(element => {
+            element.CartId = cart.CartId;
+        });
+        const product_Cart = await prisma.cart_Product.createMany({
+            data: products,
+        });
+
+        res.status(200).json(cart);
     }catch(err){
+        console.log(err);
         res.status(500).json(err);
     }
 })
 
-router.put("/:id", async (req,res) =>{
+//update
+router.put("/:id", verifyToken, async (req,res) =>{
     try{
-        const updatedCart = await Cart.findByIdAndUpdate(req.params.id, {
-            $set: req.body,
-        },{new:true});
-        res.status(200).json(updatedCart);
+        const {products, ...others} = req.body;
+        await prisma.cart.update({
+            where:{
+                CartId: req.params.id
+            },
+            data: others,
+        })
+        if(products){
+            products.forEach(element => {
+                element.CartId = req.params.id
+            });
+            prisma.$transaction(async(prisma) => {
+                try {
+                      for (let object of products) {
+                        await prisma.cart_Product.upsert({
+                          where: {
+                            CartId_ProductId: {
+                                CartId: object.CartId,
+                                ProductId: object.ProductId,
+                            }
+                          },
+                          update: {
+                            amount: object.amount
+                          },
+                          create: object,
+                        });
+                      }
+              }catch(err){
+                console.log(err);
+              }});
+        }
+        res.status(200).json("Cart updated");
     }catch(err){
         res.status(500).json(err);
+        console.log(err);
     }
 });
 
