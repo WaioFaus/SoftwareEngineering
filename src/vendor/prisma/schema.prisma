@@ -141,3 +141,12 @@ model Image {
 
   @@index([productId])
 }
+
+model Message {
+  id          String   @id @default(uuid())
+  userId      String
+  userName    String
+  email       String
+  messageBody String
+  createdAt   DateTime @default(now())
+}
