@@ -1,7 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import SectionHeader from "./section_header";
-
 import ProductCard from "./ui/product-card";
 import { Product } from "@/type";
 
