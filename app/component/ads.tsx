@@ -13,28 +13,11 @@ interface Billboards {
 }
 
 const Ads: React.FC<Billboards> = ({ slide }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  const prevSlide = () => {
-    const isFirstSlide = currentIndex === 0;
-    const newIndex = isFirstSlide ? slide.length - 1 : currentIndex - 1;
-    setCurrentIndex(newIndex);
-  };
-
-  const nextSlide = () => {
-    const isLastSlide = currentIndex === slide.length - 1;
-    const newIndex = isLastSlide ? 0 : currentIndex + 1;
-    console.log(currentIndex);
-    setCurrentIndex(newIndex);
-  };
-  const goToSlide = (slideIndex: SetStateAction<number>) => {
-    setCurrentIndex(slideIndex);
-  };
-
+  const random = Math.floor(Math.random() * slide.length);
   return (
     <div className="w-[1200px] h-[600px]  mr-[100px] relative group">
       <div
-        style={{ backgroundImage: `url(${slide[currentIndex].imageUrl})` }}
+        style={{ backgroundImage: `url(${slide[random].imageUrl})` }}
         className="w-full h-full  bg-center bg-cover duration-500"
       ></div>
     </div>
