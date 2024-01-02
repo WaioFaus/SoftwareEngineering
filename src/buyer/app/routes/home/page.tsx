@@ -7,6 +7,7 @@ import Ads from "@/components/ads";
 import getCategories from "@/actions/get-categories";
 import FeaturedSection from "@/components/featured-section";
 import BestByCategories from "@/components/bestByCategories-section";
+import RecentlyAddedSection from "@/components/recentlyAdded-section";
 
 const Home = async () => {
   const products = await getProducts({
@@ -24,6 +25,7 @@ const Home = async () => {
         </div>
         <FeaturedSection data={products} />
         <BestByCategories data={products} />
+        <RecentlyAddedSection data={products} />
       </div>
     </Container>
   );
