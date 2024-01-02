@@ -1,15 +1,4 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import SectionHeader from "./section_header";
-import getCategories from "@/actions/get-categories";
 import Link from "next/link";
 import { Category } from "@/type";
 
