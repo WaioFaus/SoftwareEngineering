@@ -3,6 +3,78 @@ import { auth } from "@clerk/nextjs";
 
 import prismadb from "@/lib/prismadb";
 export const storeId = "2104";
+export async function POST(req: Request) {
+  try {
+    const { userId } = auth();
+
+    const body = await req.json();
+
+    const {
+      name,
+      price,
+      categoryId,
+      colorId,
+      sizeId,
+      images,
+      isFeatured,
+      isArchived,
+    } = body;
+
+    if (!userId) {
+      return new NextResponse("Unauthenticated", { status: 403 });
+    }
+
+    if (!name) {
+      return new NextResponse("Name is required", { status: 400 });
+    }
+
+    if (!images || !images.length) {
+      return new NextResponse("Images are required", { status: 400 });
+    }
+
+    if (!price) {
+      return new NextResponse("Price is required", { status: 400 });
+    }
+
+    if (!categoryId) {
+      return new NextResponse("Category id is required", { status: 400 });
+    }
+
+    if (!colorId) {
+      return new NextResponse("Color id is required", { status: 400 });
+    }
+
+    if (!sizeId) {
+      return new NextResponse("Size id is required", { status: 400 });
+    }
+
+    const product = await prismadb.product.create({
+      data: {
+        userId,
+        name,
+        price,
+        isFeatured,
+        isArchived,
+        categoryId,
+        colorId,
+        sizeId,
+        storeId,
+
+        images: {
+          createMany: {
+            data: [...images.map((image: { url: string }) => image)],
+          },
+        },
+      },
+    });
+
+    return NextResponse.json(product);
+  } catch (error) {
+    console.log("[PRODUCTS_POST]", error);
+    return new NextResponse("Internal error", { status: 500 });
+  }
+}
+
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -10,10 +82,6 @@ export async function GET(req: Request) {
     const colorId = searchParams.get("colorId") || undefined;
     const sizeId = searchParams.get("sizeId") || undefined;
     const isFeatured = searchParams.get("isFeatured");
-
-    if (!storeId) {
-      return new NextResponse("Store id is required", { status: 400 });
-    }
 
     const products = await prismadb.product.findMany({
       where: {

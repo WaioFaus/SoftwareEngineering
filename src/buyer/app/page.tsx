@@ -1,36 +1,39 @@
+import { Button } from "@/components/ui/button";
+import { SignInButton, auth, useAuth } from "@clerk/nextjs";
+import Link from "next/link";
 
-import CategoryList from "@/components/category_list";
-import ThisMonthSection from "@/components/this_month";
-import Container from "@/components/ui/container";
-import Ads from "@/components/ads";
-
-const Home = async () => {
-  const products = await getProducts({ isFeatured: true });
-  const random = Math.floor(Math.random() * products.length);
-  const billboards = await getBillboards();
-  const categories = await getCategories();
-
+const LoginPage = () => {
+  const { userId } = auth();
   return (
-    <Container>
-      <div className="flex-col - w-full">
-        <div className="flex items-start justify-between w-full mt-[60px] ">
-          <CategoryList data={categories}></CategoryList>
-          <Ads slide={billboards}></Ads>
+    <div className="relative w-screen">
+      <img
+        src="https://hips.hearstapps.com/hmg-prod/images/posters-in-cozy-apartment-interior-royalty-free-image-943910360-1534189931.jpg"
+        className="h-full w-full object-cover"
+        alt="bg"
+      />
+      <div className="absolute top-1/2 right-10 transform -translate-y-1/2 w-[500px] h-[400px] bg-white bg-opacity-50 p-8 backdrop-blur-md rounded-md shadow-lg flex-col">
+        <h1 className="text-3xl font-bold mb-4 text-[#2A373A]">
+          Home Sweet Home, Stocked Sweetly: Your Ultimate Household Hub!
+        </h1>
+        <p className="text-lg font-semibold">
+          A safe & convenient place to sell and buy your needs
+        </p>
+        <div className="pt-8">
+          {!userId && (
+            <SignInButton mode="modal">
+              <Button className="bg-[#2A373A]">Sign in to begin</Button>
+            </SignInButton>
+          )}
+          {userId && (
+            <Button asChild>
+              <Link href="/home" className="text-md font-medium">
+                Enter home!
+              </Link>
+            </Button>
+          )}
         </div>
-        <ThisMonthSection data={products} />
       </div>
-    </Container>
+    </div>
   );
 };
-
-export default Home;
-
-{
-  /* <div className="space-y-10 pb-10">
-        <CategoryList data={categories}></CategoryList>
-        <Billboard data={billboards[random]} />
-        <div className="flex flex-col gap-y-8 px-4">
-          <ProductList data={products} title="Featured" />
-        </div>
-      </div> */
-}
+export default LoginPage;

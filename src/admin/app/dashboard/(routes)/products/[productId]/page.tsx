@@ -1,8 +1,11 @@
 import prismadb from "@/lib/prismadb";
 
 import { ProductForm } from "./components/product-form";
+import { auth } from "@clerk/nextjs";
 export const storeId = "2104";
 const ProductPage = async ({ params }: { params: { productId: string } }) => {
+  const { userId } = await auth();
+  if (!userId) return;
   const product = await prismadb.product.findUnique({
     where: {
       id: params.productId,

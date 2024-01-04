@@ -5,6 +5,7 @@ import { formatter } from "@/lib/utils";
 
 import { ProductsClient } from "./components/client";
 import { ProductColumn } from "./components/columns";
+import { auth } from "@clerk/nextjs";
 export const storeId = "2104";
 const ProductsPage = async () => {
   const products = await prismadb.product.findMany({

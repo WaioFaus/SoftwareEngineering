@@ -19,7 +19,6 @@ export interface Product {
   size: Size;
   color: Color;
   images: Image[];
-  createdAt: Date;
 }
 export interface Image {
   id: string;

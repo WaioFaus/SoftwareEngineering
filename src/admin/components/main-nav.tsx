@@ -48,6 +48,11 @@ export function MainNav({
       label: "Orders",
       active: pathname === `/dashboard/orders`,
     },
+    {
+      href: `/dashboard/messages`,
+      label: "Messages",
+      active: pathname === `/dashboard/messages`,
+    },
   ];
 
   return (
