@@ -23,9 +23,9 @@ const Home = async () => {
           <CategoryList data={categories}></CategoryList>
           <Ads slide={billboards}></Ads>
         </div>
-        <FeaturedSection data={products} />
+         <FeaturedSection data={products} />
         <BestByCategories data={products} />
-        <RecentlyAddedSection data={products} />
+        <RecentlyAddedSection data={products} /> 
       </div>
     </Container>
   );
