@@ -49,7 +49,7 @@ const ProductCard: React.FC<ProductCardData> = ({ data }) => {
         <p className="font-semibold text-lg">{data.name}</p>
         <p className="text-sm text-gray-500">{data.category.name}</p>
         <p className="text-md pt-2 font-semibold text-black">
-          {data.price}.VND
+          {data.price}.$
         </p>
       </div>
     </div>

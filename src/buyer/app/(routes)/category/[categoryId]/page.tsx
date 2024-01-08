@@ -42,7 +42,7 @@ const Category: React.FC<CategoryPageProps> = async ({
               <Filter valueKey="colorId" name="Colors" data={colors}></Filter>
             </div>
             <div className="  col-span-4 ">
-              <div className="grid grid-cols-1 gap-4">
+              <div className="grid grid-cols-4 gap-4">
                 {products.map((item) => (
                   <ProductCard data={item} key={item.id} />
                 ))}

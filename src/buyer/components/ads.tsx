@@ -15,11 +15,8 @@ interface Billboards {
 const Ads: React.FC<Billboards> = ({ slide }) => {
   const random = Math.floor(Math.random() * slide.length);
   return (
-    <div className="w-[1200px] h-[600px]  mr-[100px] relative group">
-      <div
-        style={{ backgroundImage: `url(${slide[random].imageUrl})` }}
-        className="w-full h-full  bg-center bg-cover duration-500"
-      ></div>
+    <div className="w-[800px] h-[600px] bg-center bg-cover duration-500"
+    style={{ backgroundImage: `url(${slide[random].imageUrl})` }}>
     </div>
   );
 };

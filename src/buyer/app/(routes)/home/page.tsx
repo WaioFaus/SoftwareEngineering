@@ -18,8 +18,8 @@ const Home = async () => {
   const categories = await getCategories();
   return (
     <Container>
-      <div className="flex-col - w-full">
-        <div className="flex items-start justify-between w-full mt-[60px] ">
+      <div className="flex-col w-full items-center">
+        <div className="flex w-full mt-[60px]  justify-center ">
           <CategoryList data={categories}></CategoryList>
           <Ads slide={billboards}></Ads>
         </div>
