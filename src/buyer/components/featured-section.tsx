@@ -10,6 +10,7 @@ interface products {
 }
 
 const FeaturedSection: React.FC<products> = ({ data }) => {
+  const limitedData = data.slice(0, 5);
   return (
     <div className="flex-col mt-[140px] mx-[100px]">
       <SectionHeader data="Featured" />
@@ -18,7 +19,7 @@ const FeaturedSection: React.FC<products> = ({ data }) => {
         <Button className="bg-[#DB4444] w-[159px] h-[56px] ">View All</Button>
       </div>
       <div className="flex justify-between  mt-[60px]">
-        {data.map((item) => (
+        {limitedData.map((item) => (
           <ProductCard data={item} />
         ))}
       </div>
