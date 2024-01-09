@@ -23,8 +23,11 @@ const Home = async () => {
           <CategoryList data={categories}></CategoryList>
           <Ads slide={billboards}></Ads>
         </div>
+        <hr  className="mt-10 mx-[100px]"/>
          <FeaturedSection data={products} />
+         <hr  className="mt-10 mx-[100px]"/>
         <BestByCategories data={products} />
+        <hr  className="mt-10 mx-[100px]"/>
         <RecentlyAddedSection data={products} /> 
       </div>
     </Container>

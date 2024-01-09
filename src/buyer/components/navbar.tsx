@@ -15,13 +15,14 @@ const Navbar = async () => {
   const products = await getProducts({
     isFeatured: true,
   });
+  const {userId} = auth();
   return (
     <div className="border-b">
       <Container>
         <div className=" bg-[#FFF] flex justify-between items-center py-[10px] border-b shadow-sm w-screen ">
           <div className="flex mx-[100px] justify-between w-full">
             <Logo />
-            <div className="flex items-center ">
+           {userId && <div className="flex items-center ">
               <Link href="/home">
                 <Button variant="ghost" className="text-md font-medium ">
                   Home
@@ -40,15 +41,15 @@ const Navbar = async () => {
                   Orders
                 </Button>
               </Link>
-            </div>
-            <div className="flex items-center space-x-2 h-70  ">
+            </div>}
+            {userId && <div className="flex items-center space-x-2 h-70  ">
       
-              <ComboboxDemo products={products}/>
+             <ComboboxDemo products={products}/>
              
-              <NavbarActions />
+             <NavbarActions />
 
               <UserButton afterSignOutUrl="/" />
-            </div>
+            </div>}
           </div>
         </div>
       </Container>

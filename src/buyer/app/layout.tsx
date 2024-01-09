@@ -4,7 +4,7 @@ import "./globals.css";
 import Footer from "@/components/footer";
 import Navbar from "@/components/navbar";
 import ToastProdvider from "@/providers/toast-provider";
-import Banner from "@/components/banner";
+
 import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
 
@@ -25,7 +25,6 @@ export default function RootLayout({
       <html lang="en">
         <body className={cn("min-h-screen", font.className)}>
           <ToastProdvider />
-          <Banner></Banner>
           <Navbar></Navbar>
           {children}
           <Footer></Footer>
